@@ -13,7 +13,7 @@ package de.headione.fx {
 	/**
 	 * @author Norman Sander
 	 */
-	public class NoiseFx extends Sprite {
+	public class HONoiseFx extends Sprite {
 		private static const DEFAULT_DIVISIONS : uint = 10;
 		private var _asset : Sprite;
 		private var _parts : Array = new Array();
@@ -22,7 +22,7 @@ package de.headione.fx {
 		private var _fxHeight : Number;
 		private var _startX : Number;
 
-		public function NoiseFx( asset : Sprite ) {
+		public function HONoiseFx( asset : Sprite ) {
 			_asset = asset;
 			_asset.visible = false;
 			_parts = new Array();
