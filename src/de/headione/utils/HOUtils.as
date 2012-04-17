@@ -1,8 +1,14 @@
 package de.headione.utils {
+	import mx.utils.StringUtil;
+
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
+	import flash.events.Event;
 	import flash.geom.Point;
+	import flash.text.AntiAliasType;
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
 
 	/**
 	 * @author Norman Sander
