@@ -1,25 +1,103 @@
 package de.headione.utils {
-	import mx.utils.StringUtil;
-
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
+	import flash.display.Shape;
 	import flash.events.Event;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
-	import flash.text.AntiAliasType;
-	import flash.text.TextField;
-	import flash.text.TextFieldAutoSize;
+	import flash.geom.Rectangle;
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 
 	/**
 	 * @author Norman Sander
 	 */
 	public class HOUtils {
+		public static function stringToPoint( string : String ) : Point {
+			var positions : Array = String( string ).split( "," );
+			var ret : Point = new Point( positions[0], positions[1] );
+			return ret;
+		}
+
 		public static function removeChildren( mc : DisplayObjectContainer ) : void {
 			while ( mc.numChildren ) {
 				mc.removeChildAt( 0 );
 			}
 		}
-		
+
+		public static function rad2deg( rad : Number ) : Number {
+			return rad * (180 / Math.PI);
+		}
+
+		public static function deg2rad( degree : Number ) : Number {
+			return degree * (Math.PI / 180);
+		}
+
+		public static function getAreaBitmap( asset : DisplayObject, area : Rectangle ) : Bitmap {
+			var assetBitmapData : BitmapData = new BitmapData( asset.width, asset.height, true, 0x000000 );
+			assetBitmapData.draw( asset );
+
+			var areaBitmapData : BitmapData = new BitmapData( area.width, area.height, true, 0x000000 );
+			areaBitmapData.copyPixels( assetBitmapData, area, new Point( 0, 0 ) );
+
+			var areaBitmap : Bitmap = new Bitmap( areaBitmapData );
+
+			return areaBitmap;
+		}
+
+		public static function getBitmap( asset : DisplayObject ) : Bitmap {
+			var assetBitmapData : BitmapData = new BitmapData( asset.width, asset.height, true, 0 );
+			assetBitmapData.draw( asset, new Matrix(), null, null, null, true );
+
+			var assetBitmap : Bitmap = new Bitmap( assetBitmapData );
+
+			return assetBitmap;
+		}
+
+		public static function getSmoothedCenteredMovieclip( asset : DisplayObject ) : MovieClip {
+			var centerContainer : MovieClip = new MovieClip();
+
+			var assetBitmapData : BitmapData = new BitmapData( asset.width, asset.height, true, 0 );
+			assetBitmapData.draw( asset, new Matrix(), null, null, null, true );
+
+			var shape : Shape = new Shape();
+			shape.graphics.beginBitmapFill( assetBitmapData, new Matrix(), false, true );
+			shape.graphics.drawRect( 0, 0, asset.width, asset.height );
+			shape.graphics.endFill();
+
+			centerObjectInContainer( shape, centerContainer );
+			centerContainer.addChild( shape );
+			return centerContainer;
+		}
+
+		public static function centerObjectInContainer( object : DisplayObject, container : DisplayObject ) : void {
+			object.x = Math.round( container.width / 2 - object.width / 2 );
+			object.y = Math.round( container.height / 2 - object.height / 2 );
+		}
+
+		public static function openLink( link : Object ) : void {
+			navigateToURL( new URLRequest( link.href ), link.target );
+		}
+
+		public static function grab( source : DisplayObject, rect : Rectangle, smoothing : Boolean = true ) : BitmapData {
+			var draw : BitmapData = new BitmapData( source.width, source.height, true, 0 );
+			var copy : BitmapData = new BitmapData( rect.width, rect.height, true, 0 );
+
+			draw.draw( source, null, null, null, null, smoothing );
+			copy.copyPixels( draw, rect, new Point( 0, 0 ) );
+
+			draw.dispose();
+
+			return copy;
+		}
+
+		private static function lockTextField( event : Event ) : void {
+			event.target.scrollV = 0;
+		}
+
 		public static function elementInArray( element : *, array : Array ) : Boolean {
 			var ret : Boolean = false;
 			for each (var i : * in array) {
@@ -55,10 +133,6 @@ package de.headione.utils {
 			ret.x = master.x;
 			ret.y = Math.round( master.y + master.height + margin );
 			return ret;
-		}
-		
-		private static function onScrollTextField( event : Event ) : void {
-			event.target.scrollV = 0;
 		}
 	}
 }
