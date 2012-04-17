@@ -50,5 +50,9 @@ package de.headione.utils {
 			ret.y = Math.round( master.y + master.height + margin );
 			return ret;
 		}
+		
+		private static function onScrollTextField( event : Event ) : void {
+			event.target.scrollV = 0;
+		}
 	}
 }
