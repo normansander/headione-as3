@@ -1,4 +1,4 @@
-package de.headione.fx.glitter {
+package de.headione.display.fx.glitter {
 	import flash.display.Sprite;
 	
 	/**
