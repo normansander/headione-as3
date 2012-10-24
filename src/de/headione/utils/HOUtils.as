@@ -16,6 +16,19 @@ package de.headione.utils {
 	 * @author Norman Sander
 	 */
 	public class HOUtils {
+		
+		public static function xmlTranslater( xmlNode : XMLList, entry : Class, xmlDescriptions : Array, classDescriptions : Array ) : Dictionary {
+			var dict : Dictionary = new Dictionary();
+			for each (var  xml: XML in xmlNode) {
+				var vo : Object = new entry();
+				for (var i : int = 0; i < xmlDescriptions.length; i++) {
+					vo[classDescriptions[i]] = xml[xmlDescriptions[i]];
+				}
+				dict[String( xml.@key )] = vo;
+			}
+			return dict;
+		}
+				
 		public static function stringToPoint( string : String ) : Point {
 			var positions : Array = String( string ).split( "," );
 			var ret : Point = new Point( positions[0], positions[1] );
@@ -76,10 +89,6 @@ package de.headione.utils {
 		public static function centerObjectInContainer( object : DisplayObject, container : DisplayObject ) : void {
 			object.x = Math.round( container.width / 2 - object.width / 2 );
 			object.y = Math.round( container.height / 2 - object.height / 2 );
-		}
-
-		public static function openLink( link : Object ) : void {
-			navigateToURL( new URLRequest( link.href ), link.target );
 		}
 
 		public static function grab( source : DisplayObject, rect : Rectangle, smoothing : Boolean = true ) : BitmapData {
