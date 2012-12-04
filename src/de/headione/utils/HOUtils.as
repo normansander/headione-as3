@@ -9,14 +9,14 @@ package de.headione.utils {
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.net.URLRequest;
-	import flash.net.navigateToURL;
-
+	import flash.text.StyleSheet;
+	import flash.text.TextField;
+	import flash.utils.Dictionary;
 	/**
 	 * @author Norman Sander
 	 */
 	public class HOUtils {
-		
+
 		public static function xmlTranslater( xmlNode : XMLList, entry : Class, xmlDescriptions : Array, classDescriptions : Array ) : Dictionary {
 			var dict : Dictionary = new Dictionary();
 			for each (var  xml: XML in xmlNode) {
@@ -28,7 +28,30 @@ package de.headione.utils {
 			}
 			return dict;
 		}
-				
+
+		public static function xmlStringsTranslater( xmlNode : XMLList ) : Dictionary {
+			var dict : Dictionary = new Dictionary();
+			for each (var  xml: XML in xmlNode) {
+				dict[String( xml.@key )] = xml.toString();
+			}
+			return dict;
+		}
+
+		public static function setBasicStyle( tf : TextField ) : void {
+			var style : StyleSheet = new StyleSheet();
+			var link : Object = new Object();
+			link.fontWeight = "bold";
+			link.textDecoration = "underline";
+			link.color = ColorConstants.GRAY;
+			var hover : Object = new Object();
+			hover.fontWeight = "bold";
+			hover.textDecoration = "underline";
+			hover.color = ColorConstants.BLUE;
+			style.setStyle( "a:link", link );
+			style.setStyle( "a:hover", hover );
+			tf.styleSheet = style;
+		}
+
 		public static function stringToPoint( string : String ) : Point {
 			var positions : Array = String( string ).split( "," );
 			var ret : Point = new Point( positions[0], positions[1] );
@@ -103,7 +126,11 @@ package de.headione.utils {
 			return copy;
 		}
 
-		private static function lockTextField( event : Event ) : void {
+		public static function disableTextScrolling( tf : TextField ) : void {
+			tf.addEventListener( Event.SCROLL, lockTf );
+		}
+
+		private static function lockTf( event : Event ) : void {
 			event.target.scrollV = 0;
 		}
 
